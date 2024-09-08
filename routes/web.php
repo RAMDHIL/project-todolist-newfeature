@@ -28,4 +28,5 @@ Route::controller(TodoListController::class)->middleware(OnlyMemberMiddleware::c
     Route::get('/todolist','todolist');
     Route::post('/todolist','addTodoList');
     Route::post('/todolist/{id}/delete','removeTodoList');
+    Route::post('/todolist/{id}/update','updateTodoList');
 });

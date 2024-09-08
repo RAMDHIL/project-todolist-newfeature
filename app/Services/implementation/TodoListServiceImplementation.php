@@ -1,46 +1,36 @@
 <?php 
+
+    
     namespace App\Services\Implementation;
+    use App\Models\Todo;
     use App\Services\TodoListService;
     use Illuminate\Support\Facades\Session;
+    use Illuminate\Support\Facades\DB;
 
     class TodoListServiceImplementation implements TodoListService{
 
         
-        function addTodoList(string $id, string $todo,string $programming): void{
-            if (!Session::exists("todolist")) {
-                Session::put("todolist",[]);
-            }
-            Session::push("todolist",[
-                'id' => $id,
+        function addTodoList(string $todo,string $programming): void{
+
+            $todo = new Todo([
                 'todo' => $todo,
-                'programming' => $programming
+                'programming_language' => $programming
             ]);
+           
+            $todo->save();
         }
 
-        function editTodoList(string $id, string $todo, string $programming): array{
-            $todolist = Session::get("todolist",[]);
-            foreach ($todolist as $index => $item) {
-                if ($item['id'] == $id) {
-                    $todolist[$index]['todo'] = $todo;
-                    $todolist[$index]['programming'] = $programming;
-                    Session::put("todolist",$todolist);
-                    return $todolist[$index];
-                }
-            }
-            return [];
-        }
+      
         function getTodoList(): array{
-            return Session::get('todolist',[]);
+            return Todo::query()->get()->toArray();
         }
         function removeTodoList(string $idtodo){
-            $todolist = Session::get("todolist");
-            foreach ($todolist as $index => $value) {
-                if ($value['id'] == $idtodo) {
-                    unset($todolist[$index]);
-                    break;   
-                }
-            }
-            Session::put("todolist", $todolist);
+            $todo = Todo::find($idtodo);          
+            $todo->delete();
+        }
+        function updateTodo(string $id,array $request):void{
+            $todo = Todo::find($id);
+            $todo->update($request);
         }
     }
     ?>

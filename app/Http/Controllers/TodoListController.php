@@ -30,9 +30,17 @@ class TodoListController extends Controller
                     'todolist' => $todolist,
                 ]);
         }
-        $this->todoListService->addTodoList(uniqid(),$input_todolist, $input_programming);
+        $this->todoListService->addTodoList($input_todolist, $input_programming);
         return redirect()->action([TodoListController::class,'todolist']);
 
+    }
+    function updateTodoList(Request $request,string $id){
+        $request = [
+            'todo' => $request->input('edittodo'),
+            'programming_language' => $request->input('editbackend')
+        ];
+        $this->todoListService->updateTodo($id,$request);
+        return redirect()->action([TodoListController::class,'todolist']);
     }
   
     function removeTodoList(Request $request,string $id):RedirectResponse{
